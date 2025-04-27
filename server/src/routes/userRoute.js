@@ -1,0 +1,11 @@
+const express=require("express")
+const router=express.Router()
+const userAuth=require("../middlewares/userAuth")
+const userController=require("../controllers/userController")
+const {upload}=require("../utils/upload")
+router.get("/profile",userAuth,userController.profile)
+router.post("/profile-edit",userAuth,upload.single('profilePic'),userController.updateProfile)
+router.get("/all",userAuth,userController.allUser)
+router.get("/:id",userAuth,userController.getSingleUser)
+router.get("/search",userAuth,userController.searchUsersByName)
+module.exports=router
