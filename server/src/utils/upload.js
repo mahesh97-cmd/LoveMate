@@ -2,7 +2,6 @@ const multer = require("multer");
 const path = require("path");
 const cloudinary = require("../config/cloudinary");
 
-// Multer config for temporary file storage
 const upload = multer({
   storage: multer.diskStorage({}),
   fileFilter: (req, file, cb) => {
@@ -17,7 +16,6 @@ const upload = multer({
   },
 });
 
-// Cloudinary upload helper
 const uploadImageToCloudinary = async (file, folderName = "LoveMate") => {
   try {
     if (!file || !file.path) throw new Error("Missing file path");

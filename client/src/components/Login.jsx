@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { useScrollToCenter } from "../utils/useScrollToCenter";
 import { motion } from "framer-motion";
@@ -85,9 +85,9 @@ const Login = () => {
 
         <p className="text-center text-sm text-white mt-5">
           Don’t have an account?{" "}
-          <a href="#" className="text-white font-medium underline">
+          <Link to ={"/signup"} className="text-white font-medium underline">
             Sign up
-          </a>
+          </Link>
         </p>
       </motion.div>
     </div>

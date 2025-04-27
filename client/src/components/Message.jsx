@@ -7,7 +7,6 @@ const Message = () => {
   const messagesEndRef = useRef(null);
   const user=useSelector((state)=>state.user)
 
-  // Sample dummy messages
   const messages = [
     { sender: "me", text: "Hey, how's it going?" },
     { sender: "other", text: "Good! You?" },
@@ -16,7 +15,6 @@ const Message = () => {
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-black text-white">
-      {/* Header */}
       <div className="p-4 border-b border-gray-800 flex items-center gap-3">
         <img
           src={user.profilePic ||"https://via.placeholder.com/40"}
@@ -29,7 +27,6 @@ const Message = () => {
         </div>
       </div>
 
-      {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
         {messages.map((msg, i) => (
           <div
@@ -46,7 +43,6 @@ const Message = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Bar */}
       <div className="flex items-center p-4 border-t border-gray-800">
         <input
           type="text"

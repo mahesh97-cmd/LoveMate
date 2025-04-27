@@ -55,13 +55,18 @@ exports.sendRequest=async(req,res)=>{
             if(action==="accept"){
                 receiver.matchedUsers.push(senderId);
                 sender.matchedUsers.push(receiverId);
+            }else if(action==="reject"){
+              if(receiver.potentialMatches.includes(senderId)){
+                receiver.potentialMatches.push(senderId)
+              }
             }
     
             await receiver.save();
             await sender.save();
         
             res.status(200).json({
-              msg: action === "accept" ? "Interest accepted. Matched!" : "Interest rejected."
+              msg: action === "accept" ? "Interest accepted. Matched!" : "Interest rejected. User sent back to feed.",
+              matchedUser: action === "accept" ? sender : null
             });
     
         } catch (error) {
@@ -74,7 +79,7 @@ exports.getMatches = async (req, res) => {
   try {
     const userId = req.user;
 
-    const user = await User.findById(userId).populate("matchedUsers", "username age gender profilePic");
+    const user = await User.findById(userId).populate("matchedUsers", "username age gender profilePic")
 
     if (!user) {
       return res.status(404).json({ msg: "User not found" });

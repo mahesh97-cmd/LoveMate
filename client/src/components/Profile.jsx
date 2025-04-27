@@ -4,17 +4,14 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { addUser } from "../utils/userSlice";
 import { useScrollToCenter } from "../utils/useScrollToCenter";
-// import { useLocation } from "react-router-dom";
 
 export default function ProfilePage() {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const fileInputRef = useRef();
   const [preview, setPreview] = useState("");
-  // const myDivRef = useRef(null);
   const myRef=useRef()
 
-  // const location = useLocation(); 
   const [toast,setToast]=useState(false)
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
@@ -27,14 +24,7 @@ export default function ProfilePage() {
   });
   useScrollToCenter(myRef)
 
-  // useEffect(() => {
-  //   if (myDivRef.current) {
-  //     myDivRef.current.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "center", // scrolls the div to vertical center
-  //     });
-  //   }
-  // }, [location]);
+  
   useEffect(() => {
     if (user) {
       setForm({
@@ -64,7 +54,6 @@ export default function ProfilePage() {
   };
 
   const cancelEdit = () => {
-    // revert
     setIsEditing(false);
     setPreview(user.profilePic);
     setForm({
@@ -115,7 +104,6 @@ export default function ProfilePage() {
           </button>
         </div>
 
-        {/* Avatar */}
         <div className="flex justify-center mb-6 ">
           <div
             className="relative cursor-pointer"
@@ -144,10 +132,8 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Profile Info */}
         <div className="space-y-6">
           {!isEditing ? (
-            // View mode: Show profile without rectangles or input fields
             <>
               <div className="text-sm font-medium text-gray-700">
                 <strong>Username: </strong>{form.username}
@@ -166,7 +152,6 @@ export default function ProfilePage() {
               </div>
             </>
           ) : (
-            // Edit mode: Show input fields
             <form onSubmit={saveProfile} className="space-y-4">
               {[
                 { label: "Username", name: "username", type: "text" },

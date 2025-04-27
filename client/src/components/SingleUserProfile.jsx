@@ -57,7 +57,6 @@ const SingleUserProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-white to-purple-100 flex justify-center items-center py-4 mb-4 px-4">
       <div className="relative bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden">
 
-        {/* Header */}
         <div className="bg-pink-500 h-40 relative">
           <button
             onClick={() => navigate(-1)}
@@ -67,7 +66,6 @@ const SingleUserProfile = () => {
           </button>
         </div>
 
-        {/* Profile Pic */}
         <div className="absolute top-20 left-1/2 transform -translate-x-1/2">
           <img
             src={
@@ -79,7 +77,6 @@ const SingleUserProfile = () => {
           />
         </div>
 
-        {/* User Info Card */}
         <div className="mt-24 px-6 pb-10 text-center space-y-6">
           <div>
             <h2 className="text-2xl font-bold text-pink-600">{user.username}</h2>

@@ -7,7 +7,7 @@ import { removeUser } from "../utils/userSlice";
 import { FaUser, FaHeart, FaPaperPlane, FaSignOutAlt } from "react-icons/fa";
 import { GiLovers } from "react-icons/gi";
 import { removeFeed } from "../utils/feedSlice";
-import { removeRequests } from "../utils/requestsSlice";
+import { clearRequests } from "../utils/requestsSlice";
 import { removeMatches } from "../utils/matchesSlice";
 
 
@@ -28,7 +28,7 @@ const Navbar = () => {
       );
       dispatch(removeUser());
       dispatch(removeFeed())
-      dispatch(removeRequests())
+      dispatch(clearRequests())
       dispatch(removeMatches())
       navigate("/login");
       console.log(res.data, "Logged out");
@@ -39,7 +39,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Top Navbar for desktop */}
       <nav className="bg-white shadow-md sticky top-0 left-0 w-full z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           
@@ -49,7 +48,6 @@ const Navbar = () => {
           </Link>
           
 
-          {/* Desktop Right Menu */}
           {user && (
             <div className="hidden md:flex items-center space-x-4 relative">
               <div className="relative">
@@ -94,7 +92,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Bottom Navbar for mobile only */}
       {user && (
         <div className="fixed bottom-0 left-0 w-full bg-white shadow-md flex justify-around items-center py-2 z-50 md:hidden">
           <Link

@@ -36,10 +36,8 @@ const Body = () => {
     <div className="flex flex-col">
       <Navbar />
       <main className="min-h-screen bg-pink-50">
-        {/* Content from nested routes like Feed, Profile, etc. will be rendered here */}
         <Outlet />
       </main>
-      {/* <Footer /> */}
     </div>
   );
 };

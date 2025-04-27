@@ -27,8 +27,8 @@ exports.updateProfile = async (req, res) => {
 
     if (req.file) {
       try {
-        const cloudinaryUrl = await uploadImageToCloudinary(req.file, "love_mate_profile_pics");  // Assuming 'love_mate_profile_pics' is the Cloudinary folder
-        allowedUpdate.profilePic = cloudinaryUrl;  // Update profilePic field with Cloudinary URL
+        const cloudinaryUrl = await uploadImageToCloudinary(req.file, "love_mate_profile_pics");  
+        allowedUpdate.profilePic = cloudinaryUrl;  
       } catch (error) {
         return res.status(500).json({ msg: "Failed to upload image to Cloudinary." });
       }
@@ -127,6 +127,49 @@ exports.searchUsersByName = async (req, res) => {
 
 
 
+// exports.allUser = async (req, res) => {
+//   try {
+//     const currentId = req.user;
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 10;
+//     const skip = (page - 1) * limit;
+
+//     const currentUser = await User.findById(currentId).select("sentInterests receivedInterests matchedUsers");
+
+//     const excludedIds = [
+//       ...currentUser.sentInterests,
+//       ...currentUser.receivedInterests,
+//       ...currentUser.matchedUsers,
+//       currentId,
+//     ];
+
+//     const filter = {
+//       _id: { $nin: excludedIds }
+//     };
+    
+//     const total = await User.countDocuments(filter);
+//     const users = await User.find(filter)
+//       .skip(skip)
+//       .limit(limit)
+//       .select("-password");
+
+
+//       console.log(filter,"filter")
+//     console.log("Excluded IDs:", excludedIds);
+//     console.log("Filtered Users:", users.length);
+//     res.status(200).json({
+//       users,
+//       currentPage: page,
+//       totalPages: Math.ceil(total / limit),
+//       totalUsers: total,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ msg: "Server error while fetching users" });
+//   }
+// };
+
+
 exports.allUser = async (req, res) => {
   try {
     const currentId = req.user;
@@ -134,35 +177,39 @@ exports.allUser = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const currentUser = await User.findById(currentId).select("sentInterests receivedInterests matchedUsers");
-
+    const currentUser = await User.findById(currentId).select("sentInterests receivedInterests matchedUsers potentialMatches");
+   
     const excludedIds = [
       ...currentUser.sentInterests,
       ...currentUser.receivedInterests,
       ...currentUser.matchedUsers,
       currentId,
     ];
-
     const filter = {
-      _id: { $nin: excludedIds }
+      $or: [
+       
+        { _id: { $in: currentUser.potentialMatches } },
+      
+        { _id: { $nin: excludedIds } }
+      ]
     };
-    
+
     const total = await User.countDocuments(filter);
     const users = await User.find(filter)
       .skip(skip)
       .limit(limit)
       .select("-password");
 
-
-      console.log(filter,"filter")
-    console.log("Excluded IDs:", excludedIds);
+   
     console.log("Filtered Users:", users.length);
+
     res.status(200).json({
       users,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
       totalUsers: total,
     });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Server error while fetching users" });

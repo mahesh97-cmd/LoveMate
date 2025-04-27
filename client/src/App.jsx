@@ -11,14 +11,14 @@ import Requests from "./components/Requests";
 import SingleUserProfile from "./components/SingleUserProfile";
 import SplashScreen from "./components/SplashScreen";
 import Message from "./components/Message";
+import Signup from "./components/Signup";
 const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading (e.g., fetch user, config)
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2500); // 2.5 seconds
+    }, 2500); 
 
     return () => clearTimeout(timer);
   }, []);
@@ -37,6 +37,7 @@ const App = () => {
             <Route path="/allRequests" element={<Requests/>} />
             <Route path="/user-profile" element={<SingleUserProfile/>} />
             <Route path="/message" element={<Message/>} />
+            <Route path="/signup" element={<Signup/>} />
           </Route>
         </Routes>
       </BrowserRouter>

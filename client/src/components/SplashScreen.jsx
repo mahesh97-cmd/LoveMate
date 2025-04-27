@@ -5,7 +5,6 @@ const SplashScreen = () => {
   return (
     <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-pink-400 via-pink-500 to-pink-600">
       <div className="text-center space-y-4">
-        {/* Animated "Love" coming from the left */}
         <motion.h1
           className="text-white text-5xl sm:text-6xl font-bold tracking-wider inline-block"
           initial={{ opacity: 0, x: -200 }}
@@ -15,7 +14,6 @@ const SplashScreen = () => {
           Love
         </motion.h1>
 
-        {/* Animated "Mate" coming from the right */}
         <motion.h1
           className="text-white text-5xl sm:text-6xl font-bold tracking-wider inline-block"
           initial={{ opacity: 0, x: 200 }}
@@ -25,7 +23,6 @@ const SplashScreen = () => {
           Mate
         </motion.h1>
 
-        {/* Subtitle Animation */}
         <motion.p
           className="text-white text-base sm:text-lg opacity-80 font-light mt-4"
           initial={{ opacity: 0 }}
@@ -35,7 +32,6 @@ const SplashScreen = () => {
           Finding your perfect match...
         </motion.p>
 
-        {/* Animated Loading Bar */}
         <motion.div
           className="mt-6 flex justify-center items-center"
           initial={{ scaleX: 0 }}

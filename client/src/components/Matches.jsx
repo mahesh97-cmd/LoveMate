@@ -21,7 +21,8 @@ const Matches = () => {
       const res = await axios.get(`${BASE_URL}/getAllMatches`, {
         withCredentials: true,
       });
-      dispatch(addMatches(res.data.matches));
+      const reversedMatches = [...res.data.matches].reverse()
+      dispatch(addMatches(reversedMatches));
       console.log(res.data,"matches all user")
       console.log(res.data,"datdtdatd")
     } catch (err) {
@@ -44,7 +45,7 @@ const Matches = () => {
       {loading ? (
         <div className="flex justify-center">
           <img
-            src="https://i.gifer.com/ZZ5H.gif" // Replace with your loading gif if needed
+            src="https://i.gifer.com/ZZ5H.gif" 
             alt="Loading..."
             className="w-16 h-16"
           />
