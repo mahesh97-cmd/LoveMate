@@ -35,7 +35,7 @@ const Feed = () => {
   const getFeed = async () => {
     if (feed?.users?.length > 0) return;
     try {
-      const res = await axios.get(BASE_URL + "/user/all", {
+      const res = await axios.get(BASE_URL + "/api/user/all", {
         withCredentials: true,
       });
       console.log(res.data, "feed");
@@ -49,7 +49,7 @@ const Feed = () => {
   const sendConnection=async(id)=>{
     console.log(id,"bhai")
     try {
-      const res=await axios.post(`${BASE_URL}/send/request/${id}`,{},{withCredentials:true})
+      const res=await axios.post(`${BASE_URL}/api/send/request/${id}`,{},{withCredentials:true})
       console.log(res.data,"straight from feed")
       dispatch(removeFeed(id))
     } catch (error) {

@@ -76,7 +76,7 @@ export default function ProfilePage() {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}/user/profile-edit`,
+        `${BASE_URL}/api/user/profile-edit`,
         data,
         { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } }
       );

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
@@ -16,13 +16,15 @@ const Navbar = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location=useLocation()
+  console.log(location,"navbarr")
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   const handleLogout = async () => {
     try {
       const res = await axios.post(
-        BASE_URL + "/auth/logout",
+        BASE_URL + "/api/auth/logout",
         {},
         { withCredentials: true }
       );
@@ -36,7 +38,7 @@ const Navbar = () => {
       console.log(error);
     }
   };
-
+  const showNavbar = !location.pathname.startsWith("/message/");
   return (
     <>
       <nav className="bg-white shadow-md sticky top-0 left-0 w-full z-50">
@@ -92,7 +94,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {user && (
+      {user && showNavbar &&(
         <div className="fixed bottom-0 left-0 w-full bg-white shadow-md flex justify-around items-center py-2 z-50 md:hidden">
           <Link
             to="/profile"

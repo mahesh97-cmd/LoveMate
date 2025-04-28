@@ -3,7 +3,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addMatches } from "../utils/matchesSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useScrollToCenter } from "../utils/useScrollToCenter";
 
 
@@ -18,7 +18,7 @@ const Matches = () => {
   console.log(matches,"slice")
   const fetchMatches = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/getAllMatches`, {
+      const res = await axios.get(`${BASE_URL}/api/getAllMatches`, {
         withCredentials: true,
       });
       const reversedMatches = [...res.data.matches].reverse()
@@ -77,12 +77,14 @@ const Matches = () => {
                   </p>
                 </div>
               </div>
-              <button
+             <Link to={"/message/"+ match._id}>
+             <button
                 className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-1 rounded-full text-sm"
-                onClick={()=>{navigate("/message",{state:{id:match._id}})}}
+                
               >
                 Message
               </button>
+             </Link>
             </div>
           ))}
         </div>

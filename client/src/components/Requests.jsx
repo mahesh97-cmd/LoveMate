@@ -39,7 +39,7 @@ const Requests = () => {
   const handleRequestResponse = async (requestId, action) => {
     try {
       const res = await axios.post(
-        `${BASE_URL}/request/${requestId}/response`,
+        `${BASE_URL}/api/request/${requestId}/response`,
         {
           action,
         },

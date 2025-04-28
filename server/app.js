@@ -8,6 +8,8 @@ const connectDB=require("../server/src/config/db")
 const authRoute=require("../server/src/routes/authRoute")
 const userRoute=require("../server/src/routes/userRoute")
 const connectionRoute=require("../server/src/routes/connectionRoute")
+const http=require("http")
+const initializeSocket = require("./src/utils/socket")
 const app = express()
 app.use(cors({
     origin: "http://localhost:5173", // e.g., http://localhost:5173
@@ -26,10 +28,13 @@ app.use("/api/auth",authRoute)
 app.use("/api/user",userRoute)
 app.use("/api",connectionRoute)
 
+const server=http.createServer(app)
+initializeSocket(server)
+
 PORT=process.env.PORT || 3004
 connectDB()
 .then(()=>{
-    app.listen(PORT,()=>{
+    server.listen(PORT,()=>{
         console.log(`app is running on ${PORT}`)
         console.log(process.env.NODE_ENV)
 

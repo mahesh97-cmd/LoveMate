@@ -21,7 +21,7 @@ const SingleUserProfile = () => {
 
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/user/${id}`, {
+        const res = await axios.get(`${BASE_URL}/api/user/${id}`, {
           withCredentials: true,
         });
         setUser(res.data);

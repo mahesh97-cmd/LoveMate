@@ -36,7 +36,7 @@ const App = () => {
             <Route path="/matches" element={<Matches/>} />
             <Route path="/allRequests" element={<Requests/>} />
             <Route path="/user-profile" element={<SingleUserProfile/>} />
-            <Route path="/message" element={<Message/>} />
+            <Route path="/message/:targetId" element={<Message/>} />
             <Route path="/signup" element={<Signup/>} />
           </Route>
         </Routes>
