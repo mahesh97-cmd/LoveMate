@@ -13,7 +13,7 @@ const Feed = () => {
   const [current, setCurrent] = useState(0);
   const dispatch = useDispatch();
   const feed = useSelector((state) => state.feed);
-  console.log(feed?.users, "feed data");
+  console.log(feed, "feed data");
   const myref=useRef()
   useScrollToCenter(myref)
 
@@ -38,8 +38,9 @@ const Feed = () => {
       const res = await axios.get(BASE_URL + "/api/user/all", {
         withCredentials: true,
       });
-      console.log(res.data, "feed");
+      console.log(res.data, "straight from feed fetch");
       dispatch(addFeed(res?.data));
+      
       console.log(res.data,"home page")
     } catch (error) {
       console.error(error);
@@ -50,10 +51,12 @@ const Feed = () => {
     console.log(id,"bhai")
     try {
       const res=await axios.post(`${BASE_URL}/api/send/request/${id}`,{},{withCredentials:true})
-      console.log(res.data,"straight from feed")
+      console.log(res.data,"straight from feed send")
       dispatch(removeFeed(id))
+      // dispatch(addFeed(res?.data))
     } catch (error) {
       console.error(error)
+      
     }
   }
 

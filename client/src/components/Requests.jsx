@@ -11,17 +11,18 @@ import { addMatches } from "../utils/matchesSlice";
 const Requests = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const requests = useSelector((state) => state.requests?.requests);
+  const requests = useSelector((state) => state.requests);
+  console.log(requests,"requestttttsssss")
   const dispatch = useDispatch();
   const myRef = useRef();
   useScrollToCenter(myRef);
 
   const getReceivedRequests = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/getReceivedRequests", {
+      const res = await axios.get(BASE_URL + "/api/getReceivedRequests", {
         withCredentials: true,
       });
-      dispatch(addRequests(res?.data));
+      dispatch(addRequests(res?.data?.requests));
       console.log(res.data, "reqqqqq");
     } catch (error) {
       console.error(error);
@@ -30,7 +31,7 @@ const Requests = () => {
   console.log(requests, "all requests");
 
   useEffect(() => {
-    if (!requests) {
+    if (!requests || requests.length===0) {
       getReceivedRequests();
     }
     setLoading(false);

@@ -5,6 +5,8 @@ const requestsSlice=createSlice({
     initialState:[],
     reducers:{
         addRequests:(state,action)=>{
+            console.log("Payload received:", action.payload);
+  console.log("Is array?", Array.isArray(action.payload));
             return action.payload;
         },
         removeRequests:(state,action)=>{

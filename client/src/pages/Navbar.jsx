@@ -41,7 +41,7 @@ const Navbar = () => {
   const showNavbar = !location.pathname.startsWith("/message/");
   return (
     <>
-      <nav className="bg-white shadow-md sticky top-0 left-0 w-full z-50">
+      {showNavbar && (<nav className="bg-white shadow-md sticky top-0 left-0 w-full z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           
           <Link to="/" className="text-2xl flex font-bold text-pink-600">
@@ -92,7 +92,7 @@ const Navbar = () => {
             </div>
           )}
         </div>
-      </nav>
+      </nav>)}
 
       {user && showNavbar &&(
         <div className="fixed bottom-0 left-0 w-full bg-white shadow-md flex justify-around items-center py-2 z-50 md:hidden">

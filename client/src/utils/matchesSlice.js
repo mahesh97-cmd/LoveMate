@@ -8,7 +8,7 @@ const matchesSlice=createSlice({
             return action.payload
         },
         removeMatches:(state,action)=>{
-            return null
+            return []
         }
     }
 })
