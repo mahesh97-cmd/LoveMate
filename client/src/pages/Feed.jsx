@@ -6,6 +6,7 @@ import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addFeed, removeFeed } from "../utils/feedSlice";
 import { useScrollToCenter } from "../utils/useScrollToCenter";
+import { LoveIndicator } from "../components/TypingIndicator";
 
 
 
@@ -13,6 +14,8 @@ const Feed = () => {
   const [current, setCurrent] = useState(0);
   const dispatch = useDispatch();
   const feed = useSelector((state) => state.feed);
+  const [loveToast,setLoveToast]=useState(false)
+  const [receiver,setReceiver]=useState("")
   console.log(feed, "feed data");
   const myref=useRef()
   useScrollToCenter(myref)
@@ -50,10 +53,15 @@ const Feed = () => {
   const sendConnection=async(id)=>{
     console.log(id,"bhai")
     try {
+      setLoveToast(true)
+
       const res=await axios.post(`${BASE_URL}/api/send/request/${id}`,{},{withCredentials:true})
       console.log(res.data,"straight from feed send")
+      setReceiver(res?.data?.receiver?.username)
       dispatch(removeFeed(id))
-      // dispatch(addFeed(res?.data))
+      setTimeout(()=>{
+        setLoveToast(false)
+      },3000)
     } catch (error) {
       console.error(error)
       
@@ -67,6 +75,12 @@ const Feed = () => {
   return (
     feed && (
       <div className="h-screen w-full flex items-center justify-center bg-black text-white relative overflow-hidden border-2 border-pink-600">
+       {loveToast && (
+          <div className="absolute  top-0 left-0 w-full h-full bg-black z-50 flex flex-col items-center justify-center">
+            <span><LoveIndicator /></span>
+            <span><p className="text-pink-500 font-bold">You are Connecting with {receiver}</p></span>
+          </div>
+        )}
         <AnimatePresence>
           {feed?.users?.length > 0 ? (
             <motion.div
@@ -83,6 +97,7 @@ const Feed = () => {
               dragElastic={0.8}
               onDragEnd={detectSwipe}
             >
+             
               <div className="absolute bottom-14 left-0 w-full bg-gradient-to-t from-black/70 via-black/30 to-transparent px-6 py-0">
                 <div className="flex items-center justify-between gap-4 bg-black/50 backdrop-blur-sm p-4 rounded-xl shadow-lg">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-red-500 flex-shrink-0">
@@ -93,6 +108,7 @@ const Feed = () => {
                     />
                   </div>
                   <div className="flex-1 text-white">
+                  
                     <h2 className="text-lg font-semibold">{feed?.users[current].username}</h2>
                     <p className="text-sm opacity-80">{feed?.users[current].caption}</p>
                   </div>

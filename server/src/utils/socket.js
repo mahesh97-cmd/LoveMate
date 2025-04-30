@@ -52,6 +52,17 @@ const initializeSocket=(server)=>{
             io.to(roomId).emit("messageReceived",{name,text})
             console.log(roomId,"room id")
         });
+
+        socket.on("typing", ({ userId, targetId }) => {
+            const roomId = hashedRoomId(userId, targetId);
+            socket.to(roomId).emit("showTyping", { userId });
+          });
+          
+          socket.on("stopTyping", ({ userId, targetId }) => {
+            const roomId = hashedRoomId(userId, targetId);
+            socket.to(roomId).emit("hideTyping", { userId });
+          });
+
         socket.on("disconnect",()=>{})
     })
 }

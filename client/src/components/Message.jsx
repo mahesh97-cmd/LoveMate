@@ -5,12 +5,16 @@ import { createSocketConnection } from "../utils/socket";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import {TypingIndicator} from "../components/TypingIndicator";
 
 const Message = () => {
   const [newMsg, setNewMsg] = useState("");
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
   const socketRef = useRef(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const [partnerTyping, setPartnerTyping] = useState(false);
+  const typingTimeout = useRef(null);
 
   const user = useSelector((state) => state.user);
   const userId = user?._id;
@@ -24,6 +28,14 @@ const Message = () => {
 
     socket.on("connect", () => {
       socket.emit("joinChat", { name: user?.username, userId, targetId });
+    });
+
+    socket.on("showTyping", ({ userId: typingUserId }) => {
+      if (typingUserId === targetId) setPartnerTyping(true);
+    });
+
+    socket.on("hideTyping", ({ userId: typingUserId }) => {
+      if (typingUserId === targetId) setPartnerTyping(false);
     });
 
     socket.on("messageReceived", ({ name, text }) => {
@@ -44,15 +56,15 @@ const Message = () => {
 
   const sendMessage = () => {
     if (!newMsg.trim()) return;
-  if (socketRef.current) {
-    socketRef.current.emit("sendMessage", {
-      name: user?.username,
-      userId,
-      targetId,
-      text: newMsg,
-    });
-    setNewMsg("");
-  }
+    if (socketRef.current) {
+      socketRef.current.emit("sendMessage", {
+        name: user?.username,
+        userId,
+        targetId,
+        text: newMsg,
+      });
+      setNewMsg("");
+    }
   };
 
   const getMessage = async () => {
@@ -66,6 +78,21 @@ const Message = () => {
     }
   };
 
+  const handleTyping = (e) => {
+    setNewMsg(e.target.value);
+    console.log(e.target.value, "typing");
+    if (!isTyping && socketRef.current) {
+      console.log(socketRef.current, "socketRef tying");
+      setIsTyping(true);
+      socketRef.current.emit("typing", { userId, targetId });
+    }
+    clearTimeout(typingTimeout.current);
+    typingTimeout.current = setTimeout(() => {
+      socketRef.current.emit("stopTyping", { userId, targetId });
+      setIsTyping(false);
+    }, 1500);
+  };
+  console.log(partnerTyping, "partnerTyping this");
   useEffect(() => {
     getMessage();
   }, []);
@@ -102,7 +129,9 @@ const Message = () => {
           <div key={i}>
             <div
               className={`text-xs font-medium opacity-40 mb-1 ${
-                msg?.senderId?.username === user?.username ? "text-left" : "text-right"
+                msg?.senderId?.username === user?.username
+                  ? "text-left"
+                  : "text-right"
               }`}
             >
               {msg?.senderId?.username === user?.username
@@ -127,10 +156,20 @@ const Message = () => {
                   : "text-end ml-auto"
               }`}
             >
-              sent {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : ""}
+              sent{" "}
+              {msg.timestamp
+                ? new Date(msg.timestamp).toLocaleTimeString()
+                : ""}
             </p>
           </div>
         ))}
+        {partnerTyping && (
+          <div className="flex items-center mb-2 text-pink-500">
+            <TypingIndicator className="text-pink-500" />
+            <span className="text-sm text-gray-400 ml-2 mb-8">Typing...</span>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -139,7 +178,7 @@ const Message = () => {
           type="text"
           placeholder="Type a message..."
           value={newMsg}
-          onChange={(e) => setNewMsg(e.target.value)}
+          onChange={handleTyping}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           className="flex-1 bg-gray-800 p-3 rounded-full text-white outline-none mr-3"
         />

@@ -11,7 +11,7 @@ const Matches = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const navigate=useNavigate()
-  const matches = useSelector((state) => state.matches || []);
+  const matches = useSelector((state) => state .matches || []);
   const Ref=useRef()
   useScrollToCenter(Ref)
 

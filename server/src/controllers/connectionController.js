@@ -22,7 +22,7 @@ exports.sendRequest=async(req,res)=>{
     
        await sender.save()
        await receiver.save()
-       res.status(200).json({msg:"Request send Successfully!"})
+       res.status(200).json({msg:"Request send Successfully!",receiver})
     } catch (error) {
         console.error(error)
     }
