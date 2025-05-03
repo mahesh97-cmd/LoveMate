@@ -5,7 +5,7 @@ import { createSocketConnection } from "../utils/socket";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import {TypingIndicator} from "../components/TypingIndicator";
+import { TypingIndicator } from "../components/TypingIndicator";
 
 const Message = () => {
   const [newMsg, setNewMsg] = useState("");
@@ -140,7 +140,7 @@ const Message = () => {
             </div>
 
             <div
-              className={`max-w-[75%] p-3 rounded-2xl break-words ${
+              className={`w-fit max-w-[75%] p-3 rounded-2xl break-words ${
                 msg?.senderId?.username === user?.username
                   ? "bg-pink-600 self-end mr-auto"
                   : "bg-gray-700 self-start ml-auto"
@@ -158,7 +158,10 @@ const Message = () => {
             >
               sent{" "}
               {msg.timestamp
-                ? new Date(msg.timestamp).toLocaleTimeString()
+                ? new Date(msg.timestamp).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
                 : ""}
             </p>
           </div>

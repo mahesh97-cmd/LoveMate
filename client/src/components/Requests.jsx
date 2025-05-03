@@ -12,7 +12,6 @@ const Requests = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const requests = useSelector((state) => state.requests);
-  console.log(requests,"requestttttsssss")
   const dispatch = useDispatch();
   const myRef = useRef();
   useScrollToCenter(myRef);
@@ -23,18 +22,19 @@ const Requests = () => {
         withCredentials: true,
       });
       dispatch(addRequests(res?.data?.requests));
-      console.log(res.data, "reqqqqq");
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
-  console.log(requests, "all requests");
 
   useEffect(() => {
-    if (!requests || requests.length===0) {
+    if (!requests || requests.length === 0) {
       getReceivedRequests();
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const handleRequestResponse = async (requestId, action) => {
@@ -46,11 +46,11 @@ const Requests = () => {
         },
         { withCredentials: true }
       );
-      dispatch(addMatches(requestId));
+      if (action === "accept") {
+        dispatch(addMatches(requestId));
+        navigate("/matches");
+      }
       dispatch(removeRequests(requestId));
-      navigate("/matches");
-      console.log(requestId, action, "response and action");
-      console.log(res.data, "request response");
     } catch (error) {
       console.error(error);
     }
@@ -58,11 +58,8 @@ const Requests = () => {
 
   return (
     requests && (
-      <div className="min-h-screen bg-gray-100 p-6">
-        <h2
-          ref={myRef}
-          className="text-3xl font-bold text-center mb-8  text-pink-600"
-        >
+      <div className="flex-1 h-full overflow-auto bg-gradient-to-br from-black via-gray-900 to-black text-white pb-20 p-6">
+        <h2 className="text-3xl font-bold text-center mb-8 text-pink-800">
           Your Requests
         </h2>
 
@@ -75,9 +72,9 @@ const Requests = () => {
             />
           </div>
         ) : requests.length === 0 ? (
-          <p className="text-center text-gray-500">No matches found yet.</p>
+          <p className="text-center text-gray-500">No requests found yet.</p>
         ) : (
-          <div className="bg-white rounded-xl shadow-md p-4 max-w-3xl mx-auto">
+          <div className="rounded-xl shadow-lg p-6 max-w-3xl mx-auto">
             {requests.map((request) => (
               <div
                 key={request._id}
@@ -96,19 +93,15 @@ const Requests = () => {
                     className="w-14 h-14 rounded-full object-cover border-2 border-pink-500"
                   />
                   <div>
-                    <h3 className="text-md font-semibold">
-                      {request.username}
-                    </h3>
+                    <h3 className="text-md font-semibold">{request.username}</h3>
                     <p className="text-sm text-gray-500">{request.caption}</p>
-                    <p className="text-xs text-gray-400 capitalize">
-                      {request.gender}
-                    </p>
+                    <p className="text-xs text-gray-400 capitalize">{request.gender}</p>
                   </div>
                 </div>
+
                 <div className="flex space-x-2">
                   <button
-                    className="bg-pink-500 hover:bg-pink-600 text-white p-2 rounded-full 
-               transition-transform duration-300 hover:scale-110"
+                    className="bg-pink-500 hover:bg-pink-800 text-white p-2 rounded-full transition-transform duration-300 hover:scale-110"
                     onClick={() => handleRequestResponse(request._id, "accept")}
                     title="Accept Match"
                   >
@@ -116,8 +109,7 @@ const Requests = () => {
                   </button>
 
                   <button
-                    className="bg-gray-300 hover:bg-gray-400 text-black p-2 rounded-full 
-               transition-transform duration-300 hover:scale-110"
+                    className="bg-gray-300 hover:bg-gray-400 text-black p-2 rounded-full transition-transform duration-300 hover:scale-110"
                     onClick={() => handleRequestResponse(request._id, "reject")}
                     title="Reject Match"
                   >

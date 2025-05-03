@@ -48,49 +48,6 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-// exports.allUser = async (req, res) => {
-//   try {
-//     const currentId = req.user;
-//     const page = parseInt(req.query.page) || 1;
-//     const limit = parseInt(req.query.limit) || 10;
-//     const skip = (page - 1) * limit;
-
-//     const currentUser = await User.findById(currentId);
-
-//     const filter = {
-//       $and: [
-//         { _id: { $ne: currentId } },
-//         {
-//           _id: {
-//             $nin: [
-//               ...currentUser.sentInterests,
-//               ...currentUser.receivedInterests,
-//               ...currentUser.matchedUsers,
-//             ],
-//           },
-//         },
-//       ],
-//     };
-// console.log(filter,"filter")
-//     // const total = await User.countDocuments(filter);
-//     // const users = await User(filter).skip(skip).limit(limit).select("-password");
-//     // const users = await User.find({ _id: { $ne: currentId } })
-//     // .skip(skip)
-//     // .limit(limit)
-//     // .select("-password");
-//     res.status(200).json({
-//       // users,
-//       // currentPage: page,
-//       // totalPages: Math.ceil(total / limit),
-//       // totalUsers: total,
-//       msg:"done"
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ msg: "Server error while fetching users" });
-//   }
-// };
-
 
 exports.getSingleUser = async (req, res) => {
   try {
@@ -170,38 +127,106 @@ exports.searchUsersByName = async (req, res) => {
 // };
 
 
+// exports.allUser = async (req, res) => {
+//   try {
+//     const currentId = req.user;
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 10;
+//     const skip = (page - 1) * limit;
+
+//     const currentUser = await User.findById(currentId).select("sentInterests receivedInterests matchedUsers potentialMatches");
+   
+//     const excludedIds = [
+//       ...currentUser.sentInterests,
+//       ...currentUser.receivedInterests,
+//       ...currentUser.matchedUsers,
+//       currentId,
+//     ];
+//     const filter = {
+//       $or: [
+       
+//         { _id: { $in: currentUser.potentialMatches } },
+      
+//         { _id: { $nin: excludedIds } }
+//       ]
+//     };
+
+//     const total = await User.countDocuments(filter);
+//     const users = await User.find(filter)
+//       .skip(skip)
+//       .limit(limit)
+//       .select("-password");
+
+   
+//     console.log("Filtered Users:", users.length);
+
+//     res.status(200).json({
+//       users,
+//       currentPage: page,
+//       totalPages: Math.ceil(total / limit),
+//       totalUsers: total,
+//     });
+
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ msg: "Server error while fetching users" });
+//   }
+// };
+
+
+
+
 exports.allUser = async (req, res) => {
   try {
     const currentId = req.user;
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = 10;
     const skip = (page - 1) * limit;
 
-    const currentUser = await User.findById(currentId).select("sentInterests receivedInterests matchedUsers potentialMatches");
-   
+    const currentUser = await User.findById(currentId).select(
+      "sentInterests receivedInterests matchedUsers potentialMatches gender"
+    );
+
     const excludedIds = [
       ...currentUser.sentInterests,
       ...currentUser.receivedInterests,
       ...currentUser.matchedUsers,
       currentId,
     ];
-    const filter = {
-      $or: [
-       
-        { _id: { $in: currentUser.potentialMatches } },
-      
-        { _id: { $nin: excludedIds } }
-      ]
-    };
 
-    const total = await User.countDocuments(filter);
-    const users = await User.find(filter)
+    const oppositeGender = currentUser.gender === "Male" ? "Female" : "Male";
+
+    let users = await User.find({
+      _id: { $in: currentUser.potentialMatches, $nin: excludedIds },
+      gender: oppositeGender,
+    })
       .skip(skip)
       .limit(limit)
       .select("-password");
 
-   
-    console.log("Filtered Users:", users.length);
+    if (users.length < limit) {
+      const remaining = limit - users.length;
+
+      const additionalUsers = await User.find({
+        _id: {
+          $nin: [
+            ...excludedIds,
+            ...users.map((u) => u._id),
+          ],
+        },
+        gender: oppositeGender,
+      })
+        .skip(Math.max(0, skip - currentUser.potentialMatches.length))
+        .limit(remaining)
+        .select("-password");
+
+      users = [...users, ...additionalUsers];
+    }
+
+    const total = await User.countDocuments({
+      _id: { $nin: excludedIds },
+      gender: oppositeGender,
+    });
 
     res.status(200).json({
       users,
@@ -209,9 +234,59 @@ exports.allUser = async (req, res) => {
       totalPages: Math.ceil(total / limit),
       totalUsers: total,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Server error while fetching users" });
   }
 };
+
+
+
+
+
+// exports.allUser = async (req, res) => {
+//   try {
+//     const currentId = req.user;
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 10;
+//     const skip = (page - 1) * limit;
+
+//     const currentUser = await User.findById(currentId).select(
+//       "sentInterests receivedInterests matchedUsers potentialMatches"
+//     );
+
+//     // Collect all excluded user IDs
+//     const excludedIds = [
+//       ...currentUser.sentInterests,
+//       ...currentUser.receivedInterests,
+//       ...currentUser.matchedUsers,
+//       currentId,
+//     ];
+
+//     // Exclude users already interacted with
+//     const filter = {
+//       _id: {
+//         $nin: excludedIds,
+//       },
+//     };
+
+//     const total = await User.countDocuments(filter);
+
+//     const users = await User.find(filter)
+//       .skip(skip)
+//       .limit(limit)
+//       .select("-password");
+
+//     console.log("Filtered Users Count:", users.length);
+
+//     res.status(200).json({
+//       users,
+//       currentPage: page,
+//       totalPages: Math.ceil(total / limit),
+//       totalUsers: total,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ msg: "Server error while fetching users" });
+//   }
+// };

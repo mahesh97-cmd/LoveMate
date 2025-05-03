@@ -4,6 +4,10 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { addUser } from "../utils/userSlice";
 import { useScrollToCenter } from "../utils/useScrollToCenter";
+import { FaUserEdit } from "react-icons/fa";
+import { GiCancel } from "react-icons/gi";
+
+
 
 export default function ProfilePage() {
   const user = useSelector((state) => state.user);
@@ -34,6 +38,7 @@ export default function ProfilePage() {
         bio: user.bio,
         caption: user.caption,
         profilePic: null,
+        age:user?.age
       });
       setPreview(user.profilePic);
     }
@@ -63,10 +68,13 @@ export default function ProfilePage() {
       bio: user.bio,
       caption: user.caption,
       profilePic: null,
+      age:user?.age
     });
   };
 
   const saveProfile = async (e) => {
+    setToast(true)
+
     e.preventDefault();
     const data = new FormData();
     Object.entries(form).forEach(([k, v]) => {
@@ -82,7 +90,6 @@ export default function ProfilePage() {
       );
       dispatch(addUser(res.data.updatedUser));
       setIsEditing(false);
-      setToast(true)
       setTimeout(()=>{
         setToast(false)
       },3000)
@@ -92,30 +99,31 @@ export default function ProfilePage() {
   };
 
   return (
-    <div ref={myRef} className="min-h-screen bg-gray-100 flex items-center justify-center p-6 mb-6">
-      <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-8 ">
-        <div className="flex space-y-10 justify-between items-center mb-4 ">
-          <h1 className="text-2xl font-bold text-pink-600">My Profile</h1>
+    <div className="flex-1 bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-6">
+      <div className=" bg-transparent rounded-2xl shadow-lg w-full max-w-md p-8">
+        <div className="space-y-10 flex justify-end">
           <button
             onClick={() => (isEditing ? cancelEdit() : setIsEditing(true))}
-            className="text-sm px-3 py-1 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition"
+            className="text-sm px-4 py-2 bg-pink-800 text-white rounded-full hover:bg-pink-800 transition "
           >
-            {isEditing ? "Cancel" : "Edit"}
+            {isEditing ? <GiCancel /> : <FaUserEdit />
+            }
           </button>
         </div>
 
-        <div className="flex justify-center mb-6 ">
+        <div className=" flex justify-center mb-6 ">
           <div
-            className="relative cursor-pointer"
+            className="relative rounded-full cursor-pointer bg-gradient-to-b  border-b-2 border-pink-800"
             onClick={() => isEditing && fileInputRef.current.click()}
           >
+           
             <img
               src={
                 preview ||
                 "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
               }
               alt="Profile"
-              className="w-28 h-28 rounded-full object-cover border-4 border-pink-500"
+              className="w-58 h-58 rounded-full  object-cover border-2 border-gray-700 m-4"
             />
             {isEditing && (
               <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white text-xs rounded-full opacity-0 hover:opacity-100 transition">
@@ -135,20 +143,25 @@ export default function ProfilePage() {
         <div className="space-y-6">
           {!isEditing ? (
             <>
-              <div className="text-sm font-medium text-gray-700">
-                <strong>Username: </strong>{form.username}
+              <div className=" flex flex-col text-center text-sm font-medium text-gray-400">
+                <strong className="text-2xl text-purple-100">{form.username}</strong>
+                
+                <strong>{form.gender}</strong>
+                <strong>{form?.age} Y/O</strong>
+
+                
               </div>
-              <div className="text-sm font-medium text-gray-700">
-                <strong>Email: </strong>{form.email}
+              <div className="rounded-xl border-b-1  border-pink-800  flex flex-col text-sm font-medium text-gray-200 p-4">
+              <strong className="text-lg text-pink-800">Bio</strong>
+              <p className="opacity-80">{form.bio}</p>
               </div>
-              <div className="text-sm font-medium text-gray-700">
-                <strong>Gender: </strong>{form.gender}
+              <div className="rounded-xl border-b-1  border-pink-800  flex flex-col text-sm font-medium text-gray-200 p-4">
+              <strong className="text-lg text-pink-800">Email</strong>
+              <p className="opacity-80">{form.email}</p>
               </div>
-              <div className="text-sm font-medium text-gray-700">
-                <strong>Bio: </strong>{form.bio}
-              </div>
-              <div className="text-sm font-medium text-gray-700">
-                <strong>Caption: </strong>{form.caption}
+              <div className="rounded-xl border-b-1  border-pink-800  flex flex-col text-sm font-medium text-gray-200 p-4">
+                <strong className="text-lg text-pink-800">Caption </strong>
+                <p className="opacity-80">{form.caption}</p>
               </div>
             </>
           ) : (
@@ -158,70 +171,62 @@ export default function ProfilePage() {
                 { label: "Email", name: "email", type: "email" },
               ].map((f) => (
                 <div key={f.name}>
-                  <label className="block text-sm font-medium mb-1">{f.label}</label>
+                  <label className="block text-sm font-medium mb-1 text-pink-800">{f.label}</label>
                   <input
                     name={f.name}
                     type={f.type}
                     value={form[f.name]}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className={`w-full px-3 py-2 border rounded-md ${
-                      isEditing ? "focus:ring-pink-500" : "bg-gray-50"
-                    }`}
+                    className={`w-full px-3 py-2 border border-pink-800 rounded-md bg-black/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 `}
                   />
                 </div>
               ))}
 
               <div>
-                <label className="block text-sm font-medium mb-1">Gender</label>
+                <label className="block text-sm font-medium mb-1 text-pink-800">Gender</label>
                 <select
                   name="gender"
                   value={form.gender}
                   onChange={handleChange}
                   disabled={!isEditing}
-                  className={`w-full px-3 py-2 border rounded-md ${
-                    isEditing ? "focus:ring-pink-500" : "bg-gray-50"
-                  }`}
+                  className="w-full  px-3 py-2 border border-pink-800 rounded-md bg-black/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
                 >
-                  <option value="">Select</option>
-                  <option>Male</option>
-                  <option>Female</option>
-                  <option>Other</option>
+                  <option  value="">Select</option>
+                  <option className="text-pink-800">Male</option>
+                  <option className="text-pink-800">Female</option>
+                  <option className="text-pink-800">Other</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Bio</label>
+                <label className="block text-sm font-medium mb-1 text-pink-800">Bio</label>
                 <textarea
                   name="bio"
                   rows={3}
                   value={form.bio}
                   onChange={handleChange}
                   disabled={!isEditing}
-                  className={`w-full px-3 py-2 border rounded-md ${
-                    isEditing ? "focus:ring-pink-500" : "bg-gray-50"
-                  }`}
+                  className="w-full px-3 py-2 border border-pink-800 rounded-md bg-black/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Caption</label>
+                <label className="block text-sm font-medium mb-1 text-pink-800">Caption</label>
                 <input
                   name="caption"
                   type="text"
                   value={form.caption}
                   onChange={handleChange}
                   disabled={!isEditing}
-                  className={`w-full px-3 py-2 border rounded-md ${
-                    isEditing ? "focus:ring-pink-500" : "bg-gray-50"
-                  }`}
+                  className="w-full px-3 py-2 border border-pink-800 rounded-md bg-black/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
                 />
               </div>
 
               {isEditing && (
                 <button
                   type="submit"
-                  className="w-full mt-4 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600 transition"
+                  className="w-full mt-4 bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-800 transition"
                 >
                   Save Changes
                 </button>

@@ -3,21 +3,21 @@ import { motion } from "framer-motion";
 
 const SplashScreen = () => {
   return (
-    <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-pink-400 via-pink-500 to-pink-600">
+    <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-black via-pink-600 to-black">
       <div className="text-center space-y-4">
         <motion.h1
-          className="text-white text-5xl sm:text-6xl font-bold tracking-wider inline-block"
-          initial={{ opacity: 0, x: -200 }}
-          animate={{ opacity: 1, x: 0 }}
+          className="text-pink-300 text-5xl sm:text-6xl font-bold tracking-wider inline-block"
+          initial={{ opacity: 0, x: -200, scale: 0.8 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ duration: 1.5, type: "spring", stiffness: 100 }}
         >
           Love
         </motion.h1>
 
         <motion.h1
-          className="text-white text-5xl sm:text-6xl font-bold tracking-wider inline-block"
-          initial={{ opacity: 0, x: 200 }}
-          animate={{ opacity: 1, x: 0 }}
+          className="text-pink-300 text-5xl sm:text-6xl font-bold tracking-wider inline-block"
+          initial={{ opacity: 0, x: 200, scale: 0.8 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ duration: 1.5, type: "spring", stiffness: 100 }}
         >
           Mate
@@ -25,8 +25,8 @@ const SplashScreen = () => {
 
         <motion.p
           className="text-white text-base sm:text-lg opacity-80 font-light mt-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 2, delay: 1 }}
         >
           Finding your perfect match...
@@ -40,9 +40,9 @@ const SplashScreen = () => {
         >
           <div className="w-36 h-2 bg-white bg-opacity-30 rounded-full overflow-hidden">
             <motion.div
-              className="w-16 h-2 bg-pink-200 rounded-full"
-              animate={{ scaleX: 1 }}
+              className="w-16 h-2 bg-pink-300 rounded-full"
               initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
               transition={{
                 type: "spring",
                 stiffness: 300,

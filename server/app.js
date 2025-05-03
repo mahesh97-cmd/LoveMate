@@ -13,8 +13,8 @@ const http=require("http")
 const initializeSocket = require("./src/utils/socket")
 const app = express()
 app.use(cors({
-    origin: "http://localhost:5173", // e.g., http://localhost:5173
-    credentials: true,              // if you're using cookies/auth headers
+    origin: "http://localhost:5173", 
+    credentials: true,              
   }))
 app.use(express.json())
 app.use(cookieParser())
