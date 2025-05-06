@@ -11,7 +11,7 @@ const Matches = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const matches = useSelector((state) => state?.matches || []);
+  const matches = useSelector((state) =>  Array.isArray(state.matches) ? state.matches : []);
   console.log(matches,"matches")
   const Ref = useRef();
   useScrollToCenter(Ref);
@@ -21,20 +21,24 @@ const Matches = () => {
       const res = await axios.get(`${BASE_URL}/api/getAllMatches`, {
         withCredentials: true,
       });
+      console.log(res.data,"line 24 matches")
       const reversedMatches = [...res.data.matches].reverse();
       dispatch(addMatches(reversedMatches));
+      console.log(reversedMatches,"reversedMatches")
     } catch (err) {
       console.error("Error fetching matches", err);
+    }finally {
+      setLoading(false); 
     }
   };
 
   useEffect(() => {
-    if (matches.length === 0) {
+    if (matches.length === 0 || !matches) {
       fetchMatches();
     } else {
       setLoading(false);
     }
-  }, [matches]);
+  }, []);
 
   return (
     <div className="flex-1 h-full overflow-auto bg-gradient-to-br from-black via-gray-900 to-black text-white pb-20 p-6">

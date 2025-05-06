@@ -10,11 +10,13 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [age, setAge] = useState("");
+  const [message, setMessage] = useState("");
   const [gender, setGender] = useState("");
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    
     try {
       const res = await axios.post(`${BASE_URL}/api/auth/signup`, {
         username,
@@ -23,14 +25,36 @@ const Signup = () => {
         age,
         gender,
       });
-      console.log(res.data);
-      showToast(true);
-      setTimeout(() => {
-        showToast(false);
-        navigate("/login");
-      }, 3000);
+
+
+      if (res.status === 200 && res?.data?.msg === "Verification code send successfully") {
+        showToast(true);
+        setMessage(res?.data?.msg);
+        
+        setTimeout(() => {
+          showToast(false);
+          navigate("/verifyemail", { state: { email } });
+        }, 1500); 
+      }
     } catch (error) {
-      console.log(error);
+      console.log(error?.response?.data?.message);
+      console.log(error.status);
+      if (
+        error?.response?.data?.message === "Verification code already sent. Check your email." &&
+        error.response.status === 400
+      ) {
+        setMessage(error?.response?.data?.message);
+        setTimeout(() => {
+          showToast(false);
+          navigate("/verifyemail", { state: { email } });
+        }, 1500); 
+      } else {
+        showToast(true);
+        setMessage("Something went wrong, please try again.");
+        setTimeout(() => {
+          showToast(false);
+        }, 1000);
+      }
     }
   };
 
@@ -40,10 +64,10 @@ const Signup = () => {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-md p-6 sm:p-8    rounded-2xl shadow-pink-600/20  mx-4"
+        className="w-full max-w-md p-6 sm:p-8 rounded-2xl shadow-pink-600/20 mx-4"
       >
         <h2 className="text-3xl font-bold text-center text-pink-800 mb-6 drop-shadow-md">
-          Create Account 
+          Create Account
         </h2>
 
         <form onSubmit={handleSignup} className="space-y-5">
@@ -116,7 +140,7 @@ const Signup = () => {
               animate={{ opacity: 1, y: 0 }}
               className="fixed top-5 left-1/2 transform -translate-x-1/2 w-80 bg-green-600 text-white p-3 rounded-lg shadow-lg text-center z-50"
             >
-              Signup successful!
+              {message}
             </motion.div>
           )}
 

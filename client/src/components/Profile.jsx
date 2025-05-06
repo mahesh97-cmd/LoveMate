@@ -7,16 +7,14 @@ import { useScrollToCenter } from "../utils/useScrollToCenter";
 import { FaUserEdit } from "react-icons/fa";
 import { GiCancel } from "react-icons/gi";
 
-
-
 export default function ProfilePage() {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const fileInputRef = useRef();
   const [preview, setPreview] = useState("");
-  const myRef=useRef()
+  const myRef = useRef();
 
-  const [toast,setToast]=useState(false)
+  const [toast, setToast] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({
     username: "",
@@ -26,9 +24,8 @@ export default function ProfilePage() {
     caption: "",
     profilePic: null,
   });
-  useScrollToCenter(myRef)
+  useScrollToCenter(myRef);
 
-  
   useEffect(() => {
     if (user) {
       setForm({
@@ -38,7 +35,7 @@ export default function ProfilePage() {
         bio: user.bio,
         caption: user.caption,
         profilePic: null,
-        age:user?.age
+        age: user?.age,
       });
       setPreview(user.profilePic);
     }
@@ -68,13 +65,12 @@ export default function ProfilePage() {
       bio: user.bio,
       caption: user.caption,
       profilePic: null,
-      age:user?.age
+      age: user?.age,
     });
   };
 
   const saveProfile = async (e) => {
-    setToast(true)
-
+    setToast(true);
     e.preventDefault();
     const data = new FormData();
     Object.entries(form).forEach(([k, v]) => {
@@ -90,9 +86,9 @@ export default function ProfilePage() {
       );
       dispatch(addUser(res.data.updatedUser));
       setIsEditing(false);
-      setTimeout(()=>{
-        setToast(false)
-      },3000)
+      setTimeout(() => {
+        setToast(false);
+      }, 3000);
     } catch (err) {
       console.error("Failed to update", err);
     }
@@ -100,30 +96,28 @@ export default function ProfilePage() {
 
   return (
     <div className="flex-1 bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-6">
-      <div className=" bg-transparent rounded-2xl shadow-lg w-full max-w-md p-8">
+      <div className=" rounded-3xl shadow-2xl w-full max-w-md md:max-w-2xl lg:max-w-3xl p-8 md:p-12 transition-all duration-300">
         <div className="space-y-10 flex justify-end">
           <button
             onClick={() => (isEditing ? cancelEdit() : setIsEditing(true))}
             className="text-sm px-4 py-2 bg-pink-800 text-white rounded-full hover:bg-pink-800 transition "
           >
-            {isEditing ? <GiCancel /> : <FaUserEdit />
-            }
+            {isEditing ? <GiCancel /> : <FaUserEdit />}
           </button>
         </div>
 
-        <div className=" flex justify-center mb-6 ">
+        <div className="flex justify-center mb-6">
           <div
-            className="relative rounded-full cursor-pointer bg-gradient-to-b  border-b-2 border-pink-800"
+            className="relative rounded-full cursor-pointer bg-gradient-to-b border-b-2 border-pink-800"
             onClick={() => isEditing && fileInputRef.current.click()}
           >
-           
             <img
               src={
                 preview ||
                 "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
               }
               alt="Profile"
-              className="w-58 h-58 rounded-full  object-cover border-2 border-gray-700 m-4"
+              className="w-40 h-40 md:w-52 md:h-52 lg:w-60 lg:h-60 rounded-full object-cover border-2 border-gray-700 m-4"
             />
             {isEditing && (
               <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-white text-xs rounded-full opacity-0 hover:opacity-100 transition">
@@ -143,24 +137,21 @@ export default function ProfilePage() {
         <div className="space-y-6">
           {!isEditing ? (
             <>
-              <div className=" flex flex-col text-center text-sm font-medium text-gray-400">
+              <div className="flex flex-col text-center text-sm font-medium text-gray-400">
                 <strong className="text-2xl text-purple-100">{form.username}</strong>
-                
                 <strong>{form.gender}</strong>
                 <strong>{form?.age} Y/O</strong>
-
-                
               </div>
-              <div className="rounded-xl border-b-1  border-pink-800  flex flex-col text-sm font-medium text-gray-200 p-4">
-              <strong className="text-lg text-pink-800">Bio</strong>
-              <p className="opacity-80">{form.bio}</p>
+              <div className="rounded-xl border-b-1 border-pink-800 flex flex-col text-sm font-medium text-gray-200 p-4">
+                <strong className="text-lg text-pink-800">Bio</strong>
+                <p className="opacity-80">{form.bio}</p>
               </div>
-              <div className="rounded-xl border-b-1  border-pink-800  flex flex-col text-sm font-medium text-gray-200 p-4">
-              <strong className="text-lg text-pink-800">Email</strong>
-              <p className="opacity-80">{form.email}</p>
+              <div className="rounded-xl border-b-1 border-pink-800 flex flex-col text-sm font-medium text-gray-200 p-4">
+                <strong className="text-lg text-pink-800">Email</strong>
+                <p className="opacity-80">{form.email}</p>
               </div>
-              <div className="rounded-xl border-b-1  border-pink-800  flex flex-col text-sm font-medium text-gray-200 p-4">
-                <strong className="text-lg text-pink-800">Caption </strong>
+              <div className="rounded-xl border-b-1 border-pink-800 flex flex-col text-sm font-medium text-gray-200 p-4">
+                <strong className="text-lg text-pink-800">Caption</strong>
                 <p className="opacity-80">{form.caption}</p>
               </div>
             </>
@@ -178,7 +169,7 @@ export default function ProfilePage() {
                     value={form[f.name]}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className={`w-full px-3 py-2 border border-pink-800 rounded-md bg-black/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 `}
+                    className="w-full px-3 py-2 border border-pink-800 rounded-md bg-black/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
                   />
                 </div>
               ))}
@@ -190,9 +181,9 @@ export default function ProfilePage() {
                   value={form.gender}
                   onChange={handleChange}
                   disabled={!isEditing}
-                  className="w-full  px-3 py-2 border border-pink-800 rounded-md bg-black/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  className="w-full px-3 py-2 border border-pink-800 rounded-md bg-black/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
                 >
-                  <option  value="">Select</option>
+                  <option value="">Select</option>
                   <option className="text-pink-800">Male</option>
                   <option className="text-pink-800">Female</option>
                   <option className="text-pink-800">Other</option>
@@ -234,9 +225,12 @@ export default function ProfilePage() {
             </form>
           )}
         </div>
-        {toast &&<div className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-pink-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 w-[86%] max-w-sm text-center">
-          Profile updated successfully!
-        </div>}
+
+        {toast && (
+          <div className="fixed top-8 left-1/2 transform -translate-x-1/2 bg-pink-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 w-[86%] max-w-sm text-center transition duration-500">
+            Profile updated successfully!
+          </div>
+        )}
       </div>
     </div>
   );

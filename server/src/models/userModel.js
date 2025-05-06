@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
+  username: { type: String, required: true, },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true},
   age: { type: Number, required: true },
@@ -12,6 +12,12 @@ const userSchema = new mongoose.Schema({
   sentInterests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   receivedInterests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   matchedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", }],
-  potentialMatches: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
+  potentialMatches: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  isVerified:{
+    type:Boolean,
+    default:false,
+    required:true,
+  },
+  verificationCode: String,
 });
 module.exports = mongoose.model("User", userSchema);

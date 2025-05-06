@@ -100,7 +100,7 @@ const Feed = () => {
       console.error(error);
     }
   };
-
+console.log(feed.isLoading,"loading...")
   useEffect(() => {
     if (feed.users.length === 0) {
       getFeed();
@@ -133,7 +133,7 @@ const Feed = () => {
             <motion.div
               ref={myref}
               key={feed?.users[current]?._id}
-              className="absolute w-full h-full md:w-[400px] md:h-[800px] md:rounded-3xl md:shadow-2xl md:overflow-hidden flex items-end justify-center bg-cover bg-center"
+              className="absolute w-full h-full md:w-[400px] md:h-[600px] md:rounded-3xl md:shadow-2xl md:overflow-hidden flex items-end justify-center bg-cover bg-center"
               style={{
                 backgroundImage: `url(${feed?.users[current]?.profilePic})`,
               }}
@@ -146,8 +146,8 @@ const Feed = () => {
               dragElastic={0.8}
               onDragEnd={detectSwipe}
             >
-              <div className="absolute left-0 w-full bg-gradient-to-t from-black/30 via-black/50 to-transparent px-6 py-6">
-                <div className="flex items-center w-full justify-between gap-6 bg-black/60 backdrop-blur-sm p-2 rounded-3xl shadow-2xl border-2 border-pink-800 border-t-0">
+              <div className="absolute left-0 w-full bg-gradient-to-t from-black/30 via-black/50 to-transparent px-6 py-6 ">
+                <div className="flex items-center w-full justify-between gap-6 bg-black/60 backdrop-blur-sm p-2 rounded-3xl shadow-2xl border-2 border-pink-800 border-t-0 ">
                   <div className="flex items-center gap-4">
                     <div className="w-20 h-20 rounded-full overflow-hidden border-3 border-pink-500 flex-shrink-0">
                       <img
@@ -182,13 +182,7 @@ const Feed = () => {
               <h1 className="text-3xl font-bold mb-4">
                 No more users available 😔
               </h1>
-              <p className="text-lg">Please check back later!</p>
-              <button
-                onClick={() => setCurrent(0)}
-                className="mt-4 text-pink-500 underline"
-              >
-                Go back to first card
-              </button>
+              
             </div>
           )}
         </AnimatePresence>

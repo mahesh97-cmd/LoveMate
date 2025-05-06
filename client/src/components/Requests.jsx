@@ -11,7 +11,7 @@ import { addMatches } from "../utils/matchesSlice";
 const Requests = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const requests = useSelector((state) => state.requests);
+  const requests = useSelector((store) => store.requests);
   const dispatch = useDispatch();
   const myRef = useRef();
   useScrollToCenter(myRef);
@@ -46,9 +46,14 @@ const Requests = () => {
         },
         { withCredentials: true }
       );
+
+
+
+      console.log(res.data.matchedUser,"from line no52")
       if (action === "accept") {
-        dispatch(addMatches(requestId));
+        dispatch(addMatches(res?.data?.matchedUser));
         navigate("/matches");
+
       }
       dispatch(removeRequests(requestId));
     } catch (error) {
