@@ -13,6 +13,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const loginRef = useRef();
+  const [err, setErr] = useState();
+  console.log(err);
 
   useScrollToCenter(loginRef);
 
@@ -27,7 +29,11 @@ const Login = () => {
       dispatch(addUser(res.data?.data));
       navigate("/");
     } catch (error) {
+      console.error(error);
       console.log(error);
+      if(error){
+        setErr(error.response.data.errors || error.response.data.msg);
+      }
     }
   };
 
@@ -43,7 +49,7 @@ const Login = () => {
         className="w-full max-w-md p-6 sm:p-8   rounded-2xl mx-4"
       >
         <h2 className="text-3xl font-bold text-center text-pink-800 mb-6 drop-shadow-md">
-          Welcome Back 
+          Welcome Back
         </h2>
 
         <form onSubmit={handleLogin} className="space-y-5">
@@ -59,6 +65,11 @@ const Login = () => {
               placeholder="you@example.com"
               required
             />
+            {err && (
+              <p className="mt-2 text-sm text-red-400 font-medium p-2 rounded-md">
+                {err}
+              </p>
+            )}
           </div>
 
           <div>
@@ -73,6 +84,11 @@ const Login = () => {
               placeholder="••••••••"
               required
             />
+            {err && (
+              <p className="mt-2 text-sm text-red-400 font-medium p-2 rounded-md">
+                {err}
+              </p>
+            )}
           </div>
 
           <button
@@ -85,7 +101,10 @@ const Login = () => {
 
         <p className="text-center text-sm text-white mt-5">
           Don’t have an account?{" "}
-          <Link to="/signup" className="text-pink-800 font-medium underline hover:text-pink-300">
+          <Link
+            to="/signup"
+            className="text-pink-800 font-medium underline hover:text-pink-300"
+          >
             Sign up
           </Link>
         </p>
