@@ -102,7 +102,7 @@ console.log(import.meta.env.VITE_BASE_KEY)
   };
 console.log(feed.isLoading,"loading...")
   useEffect(() => {
-    if (feed.users.length === 0 || !feed.users) {
+    if (feed.users.length === 0) {
       getFeed();
     }
   }, []);
