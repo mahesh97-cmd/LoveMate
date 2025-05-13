@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 // import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 import { useScrollToCenter } from "../utils/useScrollToCenter";
 import { motion } from "framer-motion";
+import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
   const [email, setEmail] = useState("jhilik@example.com");
@@ -22,7 +23,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_KEY}/api/auth/login`,
+        `${BASE_URL}/api/auth/login`,
         { email, password },
         { withCredentials: true }
       );
@@ -33,7 +34,7 @@ const Login = () => {
       console.error(error);
       console.log(error);
       if(error){
-        setErr(error.response.data.errors || error.response.data.msg);
+        setErr(error?.response?.data?.errors || error?.response?.data?.msg);
       }
     }
   };
