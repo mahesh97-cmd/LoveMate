@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { BASE_URL } from "../utils/constants";
+// import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 import { FaVenusMars, FaEnvelope, FaUserAlt, FaTransgender,FaInfoCircle } from "react-icons/fa";
 import { BsClockHistory } from "react-icons/bs";
 import { useSelector } from "react-redux";
@@ -17,15 +17,18 @@ const SingleUserProfile = () => {
  console.log(loggedinUser,"logginUser")
  
   useEffect(() => {
-    if (!id) return;
+    console.log(id,"idddd")
 
+    if (!id) return;
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/api/user/${id}`, {
+                console.log(res.data,"incoming userId")
+
+        const res = await axios.get(`${import.meta.env.VITE_BASE_KEY}/api/user/${id}`, {
           withCredentials: true,
         });
         setUser(res.data);
-        console.log(res.data._id,"incoming userId")
+        console.log(res.data,"incoming userId")
       } catch (err) {
         console.error("Failed to fetch user", err);
       } finally {

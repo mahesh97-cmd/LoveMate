@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import { BASE_URL } from "../utils/constants";
+// import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 import { addUser } from "../utils/userSlice";
 import { useScrollToCenter } from "../utils/useScrollToCenter";
 import { FaUserEdit } from "react-icons/fa";
@@ -80,7 +80,7 @@ export default function ProfilePage() {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}/api/user/profile-edit`,
+        `${import.meta.env.VITE_BASE_KEY}/api/user/profile-edit`,
         data,
         { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } }
       );

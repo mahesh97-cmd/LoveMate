@@ -3,7 +3,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/constants";
+// import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 import { useScrollToCenter } from "../utils/useScrollToCenter";
 import { motion } from "framer-motion";
 
@@ -22,10 +22,11 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        BASE_URL + "/api/auth/login",
+        `${import.meta.env.VITE_BASE_KEY}/api/auth/login`,
         { email, password },
         { withCredentials: true }
       );
+      console.log(res.data?.data,"logiinnn")
       dispatch(addUser(res.data?.data));
       navigate("/");
     } catch (error) {

@@ -10,8 +10,8 @@ const {
 
 router.post("/signup",validate(userValidation),authController.signup)
 
-router.post("/login",validate(loginValidation), authController.login)
+router.post("/login",authController.login)
 router.post("/logout",authController.logout)
-router.post("/verifyemail",validate(verifyEmailValidation), authController.verifyEmail)
+router.post("/verifyemail",authController.verifyEmail)
 
 module.exports=router

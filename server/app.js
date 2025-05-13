@@ -13,7 +13,7 @@ const http=require("http")
 const initializeSocket = require("./src/utils/socket")
 const app = express()
 app.use(cors({
-    origin: "http://localhost:5173", 
+    origin: ["http://localhost:5173", "https://lovemate.onrender.com"], 
     credentials: true,              
   }))
 app.use(express.json())

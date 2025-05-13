@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { BASE_URL } from "../utils/constants";
+// import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequests, removeRequests } from "../utils/requestsSlice";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ const Requests = () => {
 
   const getReceivedRequests = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/api/getReceivedRequests", {
+      const res = await axios.get(`${import.meta.env.VITE_BASE_KEY}/api/getReceivedRequests`, {
         withCredentials: true,
       });
       dispatch(addRequests(res?.data?.requests));
@@ -40,7 +40,7 @@ const Requests = () => {
   const handleRequestResponse = async (requestId, action) => {
     try {
       const res = await axios.post(
-        `${BASE_URL}/api/request/${requestId}/response`,
+        `${import.meta.env.VITE_BASE_KEY}/api/request/${requestId}/response`,
         {
           action,
         },

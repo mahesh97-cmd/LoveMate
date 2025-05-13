@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { BASE_URL } from "../utils/constants";
+// import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addMatches } from "../utils/matchesSlice";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ const Matches = () => {
 
   const fetchMatches = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/getAllMatches`, {
+      const res = await axios.get(`https://lovemate.onrender.com/api/getAllMatches`, {
         withCredentials: true,
       });
       console.log(res.data,"line 24 matches")

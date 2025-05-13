@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import { BASE_URL } from "../utils/constants";
+// import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addFeed,
@@ -20,7 +20,7 @@ const Feed = () => {
   const feed = useSelector((state) => state.feed);
   const [loveToast, setLoveToast] = useState(false);
   const [receiver, setReceiver] = useState("");
-
+console.log(import.meta.env.VITE_BASE_KEY)
   const myref = useRef();
   useScrollToCenter(myref);
 
@@ -53,7 +53,7 @@ const Feed = () => {
 
     try {
       const res = await axios.get(
-        `${BASE_URL}/api/user/all?page=${feed.currentPage - 1}`,
+        `${import.meta.env.VITE_BASE_KEY}/api/user/all`,
         {
           withCredentials: true,
         }
@@ -89,7 +89,7 @@ const Feed = () => {
     try {
       setLoveToast(true);
       const res = await axios.post(
-        `${BASE_URL}/api/send/request/${id}`,
+        `${import.meta.env.VITE_BASE_KEY}/api/send/request/${id}`,
         {},
         { withCredentials: true }
       );
@@ -102,7 +102,7 @@ const Feed = () => {
   };
 console.log(feed.isLoading,"loading...")
   useEffect(() => {
-    if (feed.users.length === 0) {
+    if (feed.users.length === 0 || !feed.users) {
       getFeed();
     }
   }, []);

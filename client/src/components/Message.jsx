@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { createSocketConnection } from "../utils/socket";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { BASE_URL } from "../utils/constants";
+// import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 import { TypingIndicator } from "../components/TypingIndicator";
 
 const Message = () => {
@@ -69,10 +69,11 @@ const Message = () => {
 
   const getMessage = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/message/${targetId}`, {
+      const res = await axios.get(`${import.meta.env.VITE_BASE_KEY}/api/message/${targetId}`, {
         withCredentials: true,
       });
       setMessages(res?.data?.message?.chats || []);
+      
     } catch (error) {
       console.log(error);
     }

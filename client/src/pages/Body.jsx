@@ -9,7 +9,7 @@ import { addUser, removeUser } from "../utils/userSlice";
 import { clearFeed, removeFeed } from "../utils/feedSlice";
 import { clearRequests } from "../utils/requestsSlice";
 import { removeMatches } from "../utils/matchesSlice";
-import { BASE_URL } from "../utils/constants";
+// import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 
 const Body = () => {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const Body = () => {
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/api/user/profile", {
+      const res = await axios.get(`${import.meta.env.VITE_BASE_KEY}/api/user/profile`, {
         withCredentials: true,
       });
       dispatch(addUser(res?.data));
@@ -33,7 +33,7 @@ const Body = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(BASE_URL + "/api/auth/logout", {}, { withCredentials: true });
+      await axios.post(`${import.meta.env.VITE_BASE_KEY}/api/auth/logout`, {}, { withCredentials: true });
       dispatch(removeUser());
       dispatch(removeFeed());
       dispatch(clearRequests());

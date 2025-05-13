@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
-import { BASE_URL } from "../utils/constants";
+// import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 import { motion } from "framer-motion";
 
 const OtpVerification = () => {
@@ -47,7 +47,7 @@ const OtpVerification = () => {
     setLoading(true);
     try {
       const res = await axios.post(
-        BASE_URL + "/api/auth/verifyemail",
+        `${import.meta.env.VITE_BASE_KEY}/api/auth/verifyemail`,
         {
           verificationCode: otp.join(""),
           email: email,

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/constants";
+// import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 import { motion } from "framer-motion";
 
 const Signup = () => {
@@ -74,7 +74,7 @@ const Signup = () => {
     if (!validateForm()) return;
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/auth/signup`, {
+      const res = await axios.post(`${import.meta.env.VITE_BASE_KEY}/api/auth/signup`, {
         username,
         email,
         password,

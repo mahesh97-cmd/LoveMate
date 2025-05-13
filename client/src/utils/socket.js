@@ -1,6 +1,6 @@
 import io from "socket.io-client"
-import { BASE_URL,SOCKET_URL } from "./constants"
+import {SOCKET_URL } from "./constants"
 
 export const createSocketConnection=()=>{
-    return io(SOCKET_URL)
+    return io(import.meta.env.VITE_BASE_KEY)
 }
