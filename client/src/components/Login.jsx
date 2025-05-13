@@ -1,9 +1,8 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { Link, useNavigate } from "react-router-dom";
-// import { import.meta.env.VITE_BASE_KEY } from "../utils/constants";
 import { useScrollToCenter } from "../utils/useScrollToCenter";
 import { motion } from "framer-motion";
 
@@ -14,9 +13,14 @@ const Login = () => {
   const navigate = useNavigate();
   const loginRef = useRef();
   const [err, setErr] = useState();
-  console.log(err);
+  const [isIOS, setIsIOS] = useState(false);
 
   useScrollToCenter(loginRef);
+
+  useEffect(() => {
+    // Detect iOS devices
+    setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent));
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -26,17 +30,42 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
-      console.log(res.data?.data,"logiinnn")
-      dispatch(addUser(res.data?.data));
-      if(res?.status===200){
-              navigate("/");
 
+      console.log(res.data?.data, "login data");
+      
+      // Store token in localStorage if on iOS
+      if (isIOS && res.data?.token) {
+        localStorage.setItem('authToken', res.data.token);
+      }
+
+      dispatch(addUser(res.data?.data));
+      
+      if (res?.status === 200) {
+        navigate("/");
       }
     } catch (error) {
-      console.error(error);
-      console.log(error);
-      if(error){
-        setErr(error?.response?.data?.errors || error?.response?.data?.msg);
+      console.error("Login error:", error);
+      setErr(error?.response?.data?.errors || error?.response?.data?.msg || "Login failed");
+      
+      // If 401 and on iOS, try token-based fallback
+      if (error.response?.status === 401 && isIOS) {
+        try {
+          const token = localStorage.getItem('authToken');
+          if (token) {
+            const profileRes = await axios.get(
+              `${import.meta.env.VITE_BASE_KEY}/api/user/profile`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              }
+            );
+            dispatch(addUser(profileRes.data?.data));
+            navigate("/");
+          }
+        } catch (fallbackError) {
+          console.error("Fallback auth failed:", fallbackError);
+        }
       }
     }
   };
@@ -50,7 +79,7 @@ const Login = () => {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-md p-6 sm:p-8   rounded-2xl mx-4"
+        className="w-full max-w-md p-6 sm:p-8 rounded-2xl mx-4"
       >
         <h2 className="text-3xl font-bold text-center text-pink-800 mb-6 drop-shadow-md">
           Welcome Back
@@ -69,11 +98,6 @@ const Login = () => {
               placeholder="you@example.com"
               required
             />
-            {err && (
-              <p className="mt-2 text-sm text-red-400 font-medium p-2 rounded-md">
-                {err}
-              </p>
-            )}
           </div>
 
           <div>
@@ -88,12 +112,15 @@ const Login = () => {
               placeholder="••••••••"
               required
             />
-            {err && (
-              <p className="mt-2 text-sm text-red-400 font-medium p-2 rounded-md">
+          </div>
+
+          {err && (
+            <div className="p-2 bg-red-900/30 rounded-lg">
+              <p className="text-sm text-red-400 font-medium text-center">
                 {err}
               </p>
-            )}
-          </div>
+            </div>
+          )}
 
           <button
             type="submit"
@@ -104,7 +131,7 @@ const Login = () => {
         </form>
 
         <p className="text-center text-sm text-white mt-5">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <Link
             to="/signup"
             className="text-pink-800 font-medium underline hover:text-pink-300"

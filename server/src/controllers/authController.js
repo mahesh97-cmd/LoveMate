@@ -133,33 +133,44 @@ try {
 }
 }
 
-exports.login=async(req,res)=>{
-try {
-    const {email,password}=req.body;
-    const user=await User.findOne({email})
-    if(!user){
-        return res.status(400).json({ msg: 'Invalid email or password' })
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(400).json({ msg: 'Invalid email or password' });
     }
-    // if (!user.isVerified) {
-    //     return res.status(400).json({ message: "Please verify your email first" });
-    //   }
-    const isMatch=await bcrypt.compare(password,user.password)
-    if(!isMatch){
-        return res.status(400).json({ msg: 'Invalid email or password' })
-    }
-    const token=jwt.sign({userId:user._id},process.env.JWT_SECRET,{expiresIn:"1d"})
 
-    res.cookie("token",token,{
-        httpOnly:true,
-        secure:true,
-        sameSite:"None",
-        maxAge:24 * 60 * 60 * 1000
-    })
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Invalid email or password' });
+    }
+
+    // 1. Create JWT token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    // 2. Set HTTP-only cookie (primary authentication)
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 24 * 60 * 60 * 1000
+    });
+
+    // 3. Also send token in response (for iOS fallback)
     res.status(200).json({
-        msg: 'Login successful',
-        data:user
-      })
-} catch (error) {
-    console.log(error)
-}
+      msg: 'Login successful',
+      data: user,
+      token: token // Include token in response body
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: 'Server error' });
+  }
 }
