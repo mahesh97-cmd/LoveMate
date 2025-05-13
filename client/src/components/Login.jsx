@@ -8,8 +8,8 @@ import { useScrollToCenter } from "../utils/useScrollToCenter";
 import { motion } from "framer-motion";
 
 const Login = () => {
-  const [email, setEmail] = useState("jhilik@example.com");
-  const [password, setPassword] = useState("jhilik@123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const loginRef = useRef();

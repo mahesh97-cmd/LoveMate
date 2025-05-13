@@ -14,7 +14,9 @@ const initializeSocket = require("./src/utils/socket")
 const app = express()
 app.use(cors({
     origin:"https://lovemate-client.onrender.com", 
-    credentials: true,              
+    credentials: true, 
+     methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  allowedHeaders: ['Content-Type', 'Authorization'],             
   }))
 app.use(express.json())
 app.use(cookieParser())

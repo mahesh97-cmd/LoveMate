@@ -18,7 +18,7 @@ const Matches = () => {
 
   const fetchMatches = async () => {
     try {
-      const res = await axios.get(`https://lovemate.onrender.com/api/getAllMatches`, {
+      const res = await axios.get(`${import.meta.env.VITE_BASE_KEY}}/api/getAllMatches`, {
         withCredentials: true,
       });
       console.log(res.data,"line 24 matches")
